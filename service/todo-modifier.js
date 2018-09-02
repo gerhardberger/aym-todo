@@ -32,11 +32,11 @@ class TodoModifier {
   }
 
   async addCollaborator (listId, userId) {
-    await this.usersRepository.addUserList(listId, userId)
+    await this.usersRepository.addUserList(userId, listId)
   }
 
   async removeCollaborator (listId, userId) {
-    await this.usersRepository.removeUserList(listId, userId)
+    await this.usersRepository.removeUserList(userId, listId)
   }
 }
 

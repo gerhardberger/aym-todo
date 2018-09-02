@@ -14,7 +14,7 @@ const todoListSchema = {
 const routes = async (fastify) => {
   fastify.get('/users/:userId/lists', require('./get-user-lists.js'))
 
-  fastify.post('/lists', { schema: todoListSchema }, require('./post-list.js'))
+  fastify.post('/users/:userId/lists', { schema: todoListSchema }, require('./post-list.js'))
   fastify.put('/lists/:listId', { schema: todoListSchema }, require('./put-list.js'))
   fastify.delete('/lists/:listId', { schema: todoListSchema }, require('./delete-list.js'))
 

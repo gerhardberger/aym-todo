@@ -11,7 +11,7 @@ beforeEach(async () => {
   dbMock = {
     put: jest.fn(),
     delete: jest.fn(),
-    query: jest.fn()
+    scan: jest.fn()
   }
 
   listsRepository = new ListsRepository(dbMock)
@@ -51,20 +51,18 @@ describe('#getLists', () => {
   let todoLists
 
   beforeEach(async () => {
-    dbMock.query.mockReturnValue({
+    dbMock.scan.mockReturnValue({
       promise: () => Promise.resolve({ Items: [TODO_LIST] })
     })
 
-    todoLists = await listsRepository.getLists([LIST_ID])
+    todoLists = await listsRepository.getLists([{ listId: LIST_ID }])
   })
 
   test('queries todo lists from db', async () => {
-    expect(dbMock.query).toHaveBeenCalledWith({
+    expect(dbMock.scan).toHaveBeenCalledWith({
       TableName: config.db.todoListsTableName,
-      KeyConditionExpression: 'id IN (:listIds)',
-      ExpressionAttributeValues: {
-        listIds: [LIST_ID].toString()
-      }
+      FilterExpression: `id IN (:${LIST_ID})`,
+      ExpressionAttributeValues: { [`:${LIST_ID}`]: LIST_ID }
     })
   })
 

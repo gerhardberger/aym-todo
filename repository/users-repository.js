@@ -28,7 +28,7 @@ class UsersRepository {
     const result = await this.db.query({
       TableName: config.db.usersListsTableName,
       KeyConditionExpression: 'userId = :userId',
-      ExpressionAttributeValues: { userId }
+      ExpressionAttributeValues: { ':userId': userId }
     }).promise()
 
     return result.Items

@@ -70,7 +70,7 @@ describe('#addCollaborator', () => {
   })
 
   test('adds collaborator to list', async () => {
-    expect(usersRepository.addUserList).toHaveBeenCalledWith(LIST_ID, USER_ID)
+    expect(usersRepository.addUserList).toHaveBeenCalledWith(USER_ID, LIST_ID)
   })
 })
 
@@ -80,6 +80,6 @@ describe('#removeCollaborator', () => {
   })
 
   test('removes collaborator to list', async () => {
-    expect(usersRepository.removeUserList).toHaveBeenCalledWith(LIST_ID, USER_ID)
+    expect(usersRepository.removeUserList).toHaveBeenCalledWith(USER_ID, LIST_ID)
   })
 })

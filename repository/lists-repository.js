@@ -30,12 +30,19 @@ class ListsRepository {
   }
 
   async getLists (listIds) {
-    const result = await this.db.query({
+    if (listIds.length === 0) {
+      return []
+    }
+
+    const listIdAttributes = {}
+    for (let { listId } of listIds) {
+      listIdAttributes[`:${listId}`] = listId
+    }
+
+    const result = await this.db.scan({
       TableName: config.db.todoListsTableName,
-      KeyConditionExpression: 'id IN (:listIds)',
-      ExpressionAttributeValues: {
-        listIds: listIds.toString()
-      }
+      FilterExpression: `id IN (${Object.keys(listIdAttributes).toString()})`,
+      ExpressionAttributeValues: listIdAttributes
     }).promise()
 
     return result.Items
