@@ -34,18 +34,26 @@ class ListsRepository {
       return []
     }
 
-    const listIdAttributes = {}
-    for (let { listId } of listIds) {
-      listIdAttributes[`:${listId}`] = listId
-    }
+    const listIdAttributes = this._getListIdAttributes(listIds)
+    const listIdAttributeKeys = Object.keys(listIdAttributes).toString()
 
     const result = await this.db.scan({
       TableName: config.db.todoListsTableName,
-      FilterExpression: `id IN (${Object.keys(listIdAttributes).toString()})`,
+      FilterExpression: `id IN (${listIdAttributeKeys})`,
       ExpressionAttributeValues: listIdAttributes
     }).promise()
 
     return result.Items
+  }
+
+  _getListIdAttributes (listIds) {
+    const listIdAttributes = {}
+
+    for (let { listId } of listIds) {
+      listIdAttributes[`:${listId}`] = listId
+    }
+
+    return listIdAttributes
   }
 }
 
