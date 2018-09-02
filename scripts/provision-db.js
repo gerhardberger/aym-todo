@@ -6,6 +6,7 @@ const {
     accessKeyId,
     secretAccessKey,
     endpoint,
+    usersTableName,
     todoListsTableName,
     usersListsTableName
   }
@@ -60,10 +61,25 @@ const USER_LISTS_TABLE_SCHEMA = {
   ]
 }
 
+const USERS_TABLE_SCHEMA = {
+  TableName: usersTableName,
+  AttributeDefinitions: [
+    { AttributeName: 'id', AttributeType: 'S' }
+  ],
+  KeySchema: [
+    { AttributeName: 'id', KeyType: 'HASH' }
+  ],
+  ProvisionedThroughput: {
+    ReadCapacityUnits: 1,
+    WriteCapacityUnits: 1
+  }
+}
+
 const provision = async () => {
   const dynamodb = new AWS.DynamoDB({ region, endpoint })
 
   try {
+    await dynamodb.createTable(USERS_TABLE_SCHEMA).promise()
     await dynamodb.createTable(LISTS_TABLE_SCHEMA).promise()
     await dynamodb.createTable(USER_LISTS_TABLE_SCHEMA).promise()
     console.log('Tables created successfully!')

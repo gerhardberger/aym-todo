@@ -7,7 +7,8 @@ module.exports = {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || 'dummy key',
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || 'dummy secret',
     endpoint: process.env.DYNAMODB_ENDPOINT || 'http://aym-todo-db:8000',
-    todoListsTableName: process.env.DYNAMODB_TABLENAME || 'TodoLists_LOCAL',
-    usersListsTableName: process.env.DYNAMODB_TABLENAME || 'UsersLists_LOCAL'
+    usersTableName: process.env.DYNAMODB_USERS_TABLENAME || 'Users_LOCAL',
+    todoListsTableName: process.env.DYNAMODB_LISTS_TABLENAME || 'TodoLists_LOCAL',
+    usersListsTableName: process.env.DYNAMODB_USERS_LISTS_TABLENAME || 'UsersLists_LOCAL'
   }
 }
