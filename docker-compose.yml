@@ -1,0 +1,33 @@
+version: '3.2'
+
+services:
+  app:
+    container_name: aym-todo-app
+    image: node:latest
+    build: ./docker/Dockerfile
+    volumes:
+      - .:/app
+    working_dir: /app
+    networks:
+      - aym-todo-backend
+    command:
+      - /bin/bash
+      - -c
+      - |
+          ./docker/wait-for-it.sh aym-todo-db:8000
+          npm start
+    ports:
+      - 8080:8080
+
+  db:
+    container_name: aym-todo-db
+    image: cnadiminti/dynamodb-local:2017-02-16
+    networks:
+      aym-todo-backend:
+        aliases:
+          - aym-todo-db
+    ports:
+      - 5432:8000
+
+networks:
+  aym-todo-backend:

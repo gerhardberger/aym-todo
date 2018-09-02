@@ -1,0 +1,30 @@
+{
+  "name": "aym-todo",
+  "version": "0.0.1",
+  "description": "TODO app for AYM",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "lint": "standard",
+    "unit": "jest -i",
+    "unit:hot": "jest --watch",
+    "test": "npm run lint && npm run test-unit",
+    "provision:db": "node scripts/provision-db.js"
+  },
+  "author": "@gerhardberger",
+  "license": "MIT",
+  "devDependencies": {
+    "firebase-mock": "^2.2.6",
+    "jest": "^23.5.0",
+    "standard": "^12.0.1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.307.0",
+    "fastify": "^1.11.1",
+    "firebase-admin": "^6.0.0",
+    "hat": "0.0.3"
+  },
+  "standard": {
+    "env": ["jest"]
+  }
+}
