@@ -64,10 +64,10 @@ const USER_LISTS_TABLE_SCHEMA = {
 const USERS_TABLE_SCHEMA = {
   TableName: usersTableName,
   AttributeDefinitions: [
-    { AttributeName: 'id', AttributeType: 'S' }
+    { AttributeName: 'email', AttributeType: 'S' }
   ],
   KeySchema: [
-    { AttributeName: 'id', KeyType: 'HASH' }
+    { AttributeName: 'email', KeyType: 'HASH' }
   ],
   ProvisionedThroughput: {
     ReadCapacityUnits: 1,
