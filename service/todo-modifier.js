@@ -17,22 +17,26 @@ class TodoModifier {
   async save (userId, todoList) {
     const listId = this.generateUniqueId()
 
-    this.usersRepository.addUserList(userId, listId)
-    this.listsRepository.addList(listId, todoList)
+    await this.usersRepository.addUserList(userId, listId)
+    await this.listsRepository.setList(listId, todoList)
 
     return listId
   }
 
   async update (listId, todoList) {
+    await this.listsRepository.setList(listId, todoList)
   }
 
-  async remove (listId, todoList) {
+  async remove (listId) {
+    await this.listsRepository.removeList(listId)
   }
 
   async addCollaborator (listId, userId) {
+    await this.usersRepository.addUserList(listId, userId)
   }
 
   async removeCollaborator (listId, userId) {
+    await this.usersRepository.removeUserList(listId, userId)
   }
 }
 

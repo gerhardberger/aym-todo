@@ -11,6 +11,7 @@ let listsRepository
 
 const USER_ID = 'dummy user id'
 const LIST_ID = 'dummy list id'
+const TODO_LIST = [{ item: 'dummy todo item', completed: false }]
 
 beforeEach(async () => {
   const idGenerator = jest.fn(() => LIST_ID)
@@ -24,12 +25,61 @@ beforeEach(async () => {
 })
 
 describe('#save', () => {
-  test('saves todo list', async () => {
-    const todoList = [{ item: 'dummy todo item', completed: false }]
+  let listId
 
-    await todoModifier.save(USER_ID, todoList)
+  beforeEach(async () => {
+    listId = await todoModifier.save(USER_ID, TODO_LIST)
+  })
 
+  test('saves user-list assignment', async () => {
     expect(usersRepository.addUserList).toHaveBeenCalledWith(USER_ID, LIST_ID)
-    expect(listsRepository.addList).toHaveBeenCalledWith(LIST_ID, todoList)
+  })
+
+  test('saves todo list', async () => {
+    expect(listsRepository.setList).toHaveBeenCalledWith(LIST_ID, TODO_LIST)
+  })
+
+  test('returns list id', async () => {
+    expect(listId).toEqual(LIST_ID)
+  })
+})
+
+describe('#update', () => {
+  beforeEach(async () => {
+    await todoModifier.update(LIST_ID, TODO_LIST)
+  })
+
+  test('updates todo list', async () => {
+    expect(listsRepository.setList).toHaveBeenCalledWith(LIST_ID, TODO_LIST)
+  })
+})
+
+describe('#remove', () => {
+  beforeEach(async () => {
+    await todoModifier.remove(LIST_ID)
+  })
+
+  test('removes todo list', async () => {
+    expect(listsRepository.removeList).toHaveBeenCalledWith(LIST_ID)
+  })
+})
+
+describe('#addCollaborator', () => {
+  beforeEach(async () => {
+    await todoModifier.addCollaborator(LIST_ID, USER_ID)
+  })
+
+  test('adds collaborator to list', async () => {
+    expect(usersRepository.addUserList).toHaveBeenCalledWith(LIST_ID, USER_ID)
+  })
+})
+
+describe('#removeCollaborator', () => {
+  beforeEach(async () => {
+    await todoModifier.removeCollaborator(LIST_ID, USER_ID)
+  })
+
+  test('removes collaborator to list', async () => {
+    expect(usersRepository.removeUserList).toHaveBeenCalledWith(LIST_ID, USER_ID)
   })
 })

@@ -6,7 +6,7 @@ class ListsRepository {
   async getLists (listIds) {
   }
 
-  async addList (listId, listData) {
+  async setList (listId, listData) {
   }
 
   async removeList (listId) {
