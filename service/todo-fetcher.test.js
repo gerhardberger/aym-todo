@@ -11,6 +11,7 @@ let listsRepository
 
 const USER_ID = 'dummy user id'
 const LIST_ID = 'dummy list id'
+const TODO_LIST = [{ item: 'dummy todo item', completed: false }]
 
 beforeEach(async () => {
   UsersRepository.mockClear()
@@ -22,14 +23,22 @@ beforeEach(async () => {
 })
 
 describe('#get', () => {
-  test('returns todo list from repository', async () => {
-    const expectedTodoList = [{ item: 'dummy todo item', completed: false }]
-    listsRepository.getLists.mockReturnValue([expectedTodoList])
+  describe('when list in db exists', () => {
+    let todoList
 
-    const todoList = await todoFetcher.get(LIST_ID)
+    beforeEach(async () => {
+      listsRepository.getLists.mockReturnValue([TODO_LIST])
 
-    expect(listsRepository.getLists).toHaveBeenCalledWith([LIST_ID])
-    expect(todoList).toEqual(expectedTodoList)
+      todoList = await todoFetcher.get(LIST_ID)
+    })
+
+    test('gets lists of user from repository', async () => {
+      expect(listsRepository.getLists).toHaveBeenCalledWith([LIST_ID])
+    })
+
+    test('returns todo list from repository', async () => {
+      expect(todoList).toEqual(TODO_LIST)
+    })
   })
 
   test('throws error on not existing list', async () => {
@@ -46,16 +55,24 @@ describe('#get', () => {
 })
 
 describe('#list', () => {
-  test('returns todos from repository', async () => {
-    const expectedTodoList = [{ item: 'dummy todo item', completed: false }]
+  let todoLists
 
+  beforeEach(async () => {
     usersRepository.getUserListIds.mockReturnValue([LIST_ID])
-    listsRepository.getLists.mockReturnValue([expectedTodoList])
+    listsRepository.getLists.mockReturnValue([TODO_LIST])
 
-    const todoLists = await todoFetcher.list(USER_ID)
+    todoLists = await todoFetcher.list(USER_ID)
+  })
 
+  test('gets list ids associated with user', async () => {
     expect(usersRepository.getUserListIds).toHaveBeenCalledWith(USER_ID)
+  })
+
+  test('gets todo lists of user', async () => {
     expect(listsRepository.getLists).toHaveBeenCalledWith([LIST_ID])
-    expect(todoLists).toEqual([expectedTodoList])
+  })
+
+  test('returns todos from repository', async () => {
+    expect(todoLists).toEqual([TODO_LIST])
   })
 })
