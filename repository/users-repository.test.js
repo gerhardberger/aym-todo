@@ -4,71 +4,53 @@ const config = require('../config.js')
 let usersRepository
 let dbMock
 
-const USER_ID = 'dummy user id'
-const LIST_ID = 'dummy list id'
+const EMAIL = 'dummy email'
+const USER_DATA = {
+  email: EMAIL,
+  registrationToken: 'dummy registration token'
+}
 
 beforeEach(async () => {
   dbMock = {
     put: jest.fn(),
-    delete: jest.fn(),
-    query: jest.fn()
+    get: jest.fn()
   }
 
   usersRepository = new UsersRepository(dbMock)
 })
 
-describe('#addUserList', () => {
+describe('#addUser', () => {
   beforeEach(async () => {
     dbMock.put.mockReturnValue({ promise: () => Promise.resolve() })
 
-    await usersRepository.addUserList(USER_ID, LIST_ID)
+    await usersRepository.addUser(USER_DATA)
   })
 
-  test('saves user-list assignment', async () => {
+  test('saves user data', async () => {
     expect(dbMock.put).toHaveBeenCalledWith({
-      TableName: config.db.usersListsTableName,
-      Item: { userId: USER_ID, listId: LIST_ID }
+      TableName: config.db.usersTableName,
+      Item: USER_DATA
     })
   })
 })
 
-describe('#removeUserList', () => {
-  beforeEach(async () => {
-    dbMock.delete.mockReturnValue({ promise: () => Promise.resolve() })
-
-    await usersRepository.removeUserList(USER_ID, LIST_ID)
-  })
-
-  test('saves user-list assignment', async () => {
-    expect(dbMock.delete).toHaveBeenCalledWith({
-      TableName: config.db.usersListsTableName,
-      Key: { userId: USER_ID, listId: LIST_ID }
-    })
-  })
-})
-
-describe('#getUserListIds', () => {
-  let listIds
+describe('#getUser', () => {
+  let userData
 
   beforeEach(async () => {
-    dbMock.query.mockReturnValue({
-      promise: () => Promise.resolve({ Items: [LIST_ID] })
-    })
+    dbMock.get.mockReturnValue({ promise: () => Promise.resolve({ Item: USER_DATA }) })
 
-    listIds = await usersRepository.getUserListIds(USER_ID)
+    userData = await usersRepository.getUser(EMAIL)
   })
 
-  test('queries user-list assignments', async () => {
-    expect(dbMock.query).toHaveBeenCalledWith({
-      TableName: config.db.usersListsTableName,
-      KeyConditionExpression: 'userId = :userId',
-      ExpressionAttributeValues: {
-        ':userId': USER_ID
-      }
+  test('queries user data', async () => {
+    expect(dbMock.get).toHaveBeenCalledWith({
+      TableName: config.db.usersTableName,
+      Key: { email: EMAIL }
     })
   })
 
-  test('returns user-list assignments', async () => {
-    expect(listIds).toEqual([LIST_ID])
+  test('returns user data', async () => {
+    expect(userData).toEqual(USER_DATA)
   })
 })

@@ -1,17 +1,15 @@
-const todoListSchema = {
-  body: {
-    type: 'array',
-    items: {
-      type: 'object',
-      properties: {
-        item: { type: 'string' },
-        completed: { type: 'boolean' }
-      }
-    }
-  }
-}
+const {
+  signUpSchema,
+  signInSchema,
+  resetPasswordSchema,
+  todoListSchema
+} = require('./route-schemas.js')
 
 const routes = async (fastify) => {
+  fastify.post('/sign-up', { schema: signUpSchema }, require('./post-sign-up.js'))
+  fastify.post('/sign-in', { schema: signInSchema }, require('./post-sign-in.js'))
+  fastify.post('/reset-password', { schema: resetPasswordSchema }, require('./post-reset-password.js'))
+
   fastify.get('/users/:userId/lists', require('./get-user-lists.js'))
 
   fastify.post('/users/:userId/lists', { schema: todoListSchema }, require('./post-list.js'))

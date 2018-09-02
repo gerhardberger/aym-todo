@@ -1,12 +1,12 @@
 const TodoModifier = require('./todo-modifier.js')
-const UsersRepository = require('../repository/users-repository.js')
+const UsersListsRepository = require('../repository/users-lists-repository.js')
 const ListsRepository = require('../repository/lists-repository.js')
 
-jest.mock('../repository/users-repository.js')
+jest.mock('../repository/users-lists-repository.js')
 jest.mock('../repository/lists-repository.js')
 
 let todoModifier
-let usersRepository
+let usersListsRepository
 let listsRepository
 
 const USER_ID = 'dummy user id'
@@ -16,12 +16,12 @@ const TODO_LIST = [{ item: 'dummy todo item', completed: false }]
 beforeEach(async () => {
   const idGenerator = jest.fn(() => LIST_ID)
 
-  UsersRepository.mockClear()
+  UsersListsRepository.mockClear()
   ListsRepository.mockClear()
 
-  usersRepository = new UsersRepository()
+  usersListsRepository = new UsersListsRepository()
   listsRepository = new ListsRepository()
-  todoModifier = new TodoModifier(usersRepository, listsRepository, idGenerator)
+  todoModifier = new TodoModifier(usersListsRepository, listsRepository, idGenerator)
 })
 
 describe('#save', () => {
@@ -32,7 +32,7 @@ describe('#save', () => {
   })
 
   test('saves user-list assignment', async () => {
-    expect(usersRepository.addUserList).toHaveBeenCalledWith(USER_ID, LIST_ID)
+    expect(usersListsRepository.addUserList).toHaveBeenCalledWith(USER_ID, LIST_ID)
   })
 
   test('saves todo list', async () => {
@@ -70,7 +70,7 @@ describe('#addCollaborator', () => {
   })
 
   test('adds collaborator to list', async () => {
-    expect(usersRepository.addUserList).toHaveBeenCalledWith(USER_ID, LIST_ID)
+    expect(usersListsRepository.addUserList).toHaveBeenCalledWith(USER_ID, LIST_ID)
   })
 })
 
@@ -80,6 +80,6 @@ describe('#removeCollaborator', () => {
   })
 
   test('removes collaborator to list', async () => {
-    expect(usersRepository.removeUserList).toHaveBeenCalledWith(USER_ID, LIST_ID)
+    expect(usersListsRepository.removeUserList).toHaveBeenCalledWith(USER_ID, LIST_ID)
   })
 })

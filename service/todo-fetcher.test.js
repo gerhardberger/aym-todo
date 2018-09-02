@@ -1,12 +1,12 @@
 const TodoFetcher = require('./todo-fetcher.js')
-const UsersRepository = require('../repository/users-repository.js')
+const UsersListsRepository = require('../repository/users-lists-repository.js')
 const ListsRepository = require('../repository/lists-repository.js')
 
-jest.mock('../repository/users-repository.js')
+jest.mock('../repository/users-lists-repository.js')
 jest.mock('../repository/lists-repository.js')
 
 let todoFetcher
-let usersRepository
+let usersListsRepository
 let listsRepository
 
 const USER_ID = 'dummy user id'
@@ -14,12 +14,12 @@ const LIST_ID = 'dummy list id'
 const TODO_LIST = [{ item: 'dummy todo item', completed: false }]
 
 beforeEach(async () => {
-  UsersRepository.mockClear()
+  UsersListsRepository.mockClear()
   ListsRepository.mockClear()
 
-  usersRepository = new UsersRepository()
+  usersListsRepository = new UsersListsRepository()
   listsRepository = new ListsRepository()
-  todoFetcher = new TodoFetcher(usersRepository, listsRepository)
+  todoFetcher = new TodoFetcher(usersListsRepository, listsRepository)
 })
 
 describe('#get', () => {
@@ -58,14 +58,14 @@ describe('#list', () => {
   let todoLists
 
   beforeEach(async () => {
-    usersRepository.getUserListIds.mockReturnValue([LIST_ID])
+    usersListsRepository.getUserListIds.mockReturnValue([LIST_ID])
     listsRepository.getLists.mockReturnValue([TODO_LIST])
 
     todoLists = await todoFetcher.list(USER_ID)
   })
 
   test('gets list ids associated with user', async () => {
-    expect(usersRepository.getUserListIds).toHaveBeenCalledWith(USER_ID)
+    expect(usersListsRepository.getUserListIds).toHaveBeenCalledWith(USER_ID)
   })
 
   test('gets todo lists of user', async () => {

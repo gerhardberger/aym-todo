@@ -20,11 +20,14 @@
   },
   "dependencies": {
     "aws-sdk": "^2.307.0",
+    "bcryptjs": "^2.4.3",
     "fastify": "^1.11.1",
     "firebase-admin": "^6.0.0",
     "hat": "0.0.3"
   },
   "standard": {
-    "env": ["jest"]
+    "env": [
+      "jest"
+    ]
   }
 }

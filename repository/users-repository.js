@@ -10,28 +10,20 @@ class UsersRepository {
     this.db = db
   }
 
-  async addUserList (userId, listId) {
+  async addUser (userData) {
     await this.db.put({
-      TableName: config.db.usersListsTableName,
-      Item: { userId, listId }
+      TableName: config.db.usersTableName,
+      Item: userData
     }).promise()
   }
 
-  async removeUserList (userId, listId) {
-    await this.db.delete({
-      TableName: config.db.usersListsTableName,
-      Key: { userId, listId }
-    }).promise()
-  }
-
-  async getUserListIds (userId) {
-    const result = await this.db.query({
-      TableName: config.db.usersListsTableName,
-      KeyConditionExpression: 'userId = :userId',
-      ExpressionAttributeValues: { ':userId': userId }
+  async getUser (email) {
+    const result = await this.db.get({
+      TableName: config.db.usersTableName,
+      Key: { email }
     }).promise()
 
-    return result.Items
+    return result.Item
   }
 }
 

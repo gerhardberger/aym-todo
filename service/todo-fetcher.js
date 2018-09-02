@@ -1,13 +1,13 @@
-const UsersRepository = require('../repository/users-repository')
+const UsersListsRepository = require('../repository/users-lists-repository')
 const ListsRepository = require('../repository/lists-repository')
 
 class TodoFetcher {
   static create () {
-    return new TodoFetcher(UsersRepository.create(), ListsRepository.create())
+    return new TodoFetcher(UsersListsRepository.create(), ListsRepository.create())
   }
 
-  constructor (usersRepository, listsRepository) {
-    this.usersRepository = usersRepository
+  constructor (usersListsRepository, listsRepository) {
+    this.usersListsRepository = usersListsRepository
     this.listsRepository = listsRepository
   }
 
@@ -22,7 +22,7 @@ class TodoFetcher {
   }
 
   async list (userId) {
-    const todosListIds = await this.usersRepository.getUserListIds(userId)
+    const todosListIds = await this.usersListsRepository.getUserListIds(userId)
     const todosList = await this.listsRepository.getLists(todosListIds)
 
     return todosList
