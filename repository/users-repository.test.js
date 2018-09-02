@@ -5,7 +5,9 @@ let usersRepository
 let dbMock
 
 const EMAIL = 'dummy email'
+const USER_ID = 'dummy id'
 const USER_DATA = {
+  id: USER_ID,
   email: EMAIL,
   registrationToken: 'dummy registration token'
 }
@@ -13,7 +15,7 @@ const USER_DATA = {
 beforeEach(async () => {
   dbMock = {
     put: jest.fn(),
-    get: jest.fn()
+    query: jest.fn()
   }
 
   usersRepository = new UsersRepository(dbMock)
@@ -38,15 +40,39 @@ describe('#getUser', () => {
   let userData
 
   beforeEach(async () => {
-    dbMock.get.mockReturnValue({ promise: () => Promise.resolve({ Item: USER_DATA }) })
+    dbMock.query.mockReturnValue({ promise: () => Promise.resolve({ Items: [USER_DATA] }) })
 
     userData = await usersRepository.getUser(EMAIL)
   })
 
   test('queries user data', async () => {
-    expect(dbMock.get).toHaveBeenCalledWith({
+    expect(dbMock.query).toHaveBeenCalledWith({
       TableName: config.db.usersTableName,
-      Key: { email: EMAIL }
+      KeyConditionExpression: 'email = :email',
+      ExpressionAttributeValues: { ':email': EMAIL }
+    })
+  })
+
+  test('returns user data', async () => {
+    expect(userData).toEqual(USER_DATA)
+  })
+})
+
+describe('#getUserById', () => {
+  let userData
+
+  beforeEach(async () => {
+    dbMock.query.mockReturnValue({ promise: () => Promise.resolve({ Items: [USER_DATA] }) })
+
+    userData = await usersRepository.getUserById(USER_ID)
+  })
+
+  test('queries user data', async () => {
+    expect(dbMock.query).toHaveBeenCalledWith({
+      TableName: config.db.usersTableName,
+      IndexName: config.db.usersIdIndexName,
+      KeyConditionExpression: 'id = :id',
+      ExpressionAttributeValues: { ':id': USER_ID }
     })
   })
 

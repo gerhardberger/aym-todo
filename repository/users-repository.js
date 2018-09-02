@@ -18,12 +18,24 @@ class UsersRepository {
   }
 
   async getUser (email) {
-    const result = await this.db.get({
+    const result = await this.db.query({
       TableName: config.db.usersTableName,
-      Key: { email }
+      KeyConditionExpression: 'email = :email',
+      ExpressionAttributeValues: { ':email': email }
     }).promise()
 
-    return result.Item
+    return result.Items[0]
+  }
+
+  async getUserById (id) {
+    const result = await this.db.query({
+      TableName: config.db.usersTableName,
+      IndexName: config.db.usersIdIndexName,
+      KeyConditionExpression: 'id = :id',
+      ExpressionAttributeValues: { ':id': id }
+    }).promise()
+
+    return result.Items[0]
   }
 }
 

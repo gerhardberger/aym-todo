@@ -8,7 +8,7 @@ const {
 const routes = async (fastify) => {
   fastify.post('/sign-up', { schema: signUpSchema }, require('./post-sign-up.js'))
   fastify.post('/sign-in', { schema: signInSchema }, require('./post-sign-in.js'))
-  fastify.post('/reset-password', { schema: resetPasswordSchema }, require('./post-reset-password.js'))
+  fastify.post('/reset-password/:id', { schema: resetPasswordSchema }, require('./post-reset-password.js'))
 
   fastify.get('/users/:userId/lists', require('./get-user-lists.js'))
 

@@ -7,6 +7,7 @@ const {
     secretAccessKey,
     endpoint,
     usersTableName,
+    usersIdIndexName,
     todoListsTableName,
     usersListsTableName
   }
@@ -64,15 +65,33 @@ const USER_LISTS_TABLE_SCHEMA = {
 const USERS_TABLE_SCHEMA = {
   TableName: usersTableName,
   AttributeDefinitions: [
-    { AttributeName: 'email', AttributeType: 'S' }
+    { AttributeName: 'email', AttributeType: 'S' },
+    { AttributeName: 'id', AttributeType: 'S' }
   ],
   KeySchema: [
-    { AttributeName: 'email', KeyType: 'HASH' }
+    { AttributeName: 'email', KeyType: 'HASH' },
+    { AttributeName: 'id', KeyType: 'RANGE' }
   ],
   ProvisionedThroughput: {
     ReadCapacityUnits: 1,
     WriteCapacityUnits: 1
-  }
+  },
+  GlobalSecondaryIndexes: [
+    {
+      IndexName: usersIdIndexName,
+      KeySchema: [
+        { AttributeName: 'id', KeyType: 'HASH' },
+        { AttributeName: 'email', KeyType: 'RANGE' }
+      ],
+      Projection: {
+        ProjectionType: 'ALL'
+      },
+      ProvisionedThroughput: {
+        ReadCapacityUnits: 1,
+        WriteCapacityUnits: 1
+      }
+    }
+  ]
 }
 
 const provision = async () => {

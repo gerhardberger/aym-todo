@@ -88,3 +88,31 @@ describe('#auth', () => {
     })
   })
 })
+
+describe('#resetPassword', () => {
+  let userId
+
+  const OTHER_HASHED_PASSWORD = 'other hashed password'
+
+  beforeEach(async () => {
+    userManager.passwordHasher.hashSync.mockReturnValue(OTHER_HASHED_PASSWORD)
+    usersRepository.getUserById.mockReturnValue(USER_DATA)
+
+    userId = await userManager.resetPassword(USER_ID, PASSWORD)
+  })
+
+  test('gets user data', async () => {
+    expect(usersRepository.getUserById).toHaveBeenCalledWith(USER_ID)
+  })
+
+  test('saves user data', async () => {
+    expect(usersRepository.addUser).toHaveBeenCalledWith({
+      ...USER_DATA,
+      password: OTHER_HASHED_PASSWORD
+    })
+  })
+
+  test('returns user id', async () => {
+    expect(userId).toEqual(USER_ID)
+  })
+})

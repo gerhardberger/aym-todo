@@ -33,6 +33,16 @@ class UserManager {
 
     return userData.id
   }
+
+  async resetPassword (id, newPassword) {
+    const userData = await this.usersRepository.getUserById(id)
+    const password = this.passwordHasher.hashSync(newPassword)
+    const userDataToSave = { ...userData, id, password }
+
+    await this.usersRepository.addUser(userDataToSave)
+
+    return id
+  }
 }
 
 module.exports = UserManager
