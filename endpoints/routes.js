@@ -1,20 +1,11 @@
 const todoListSchema = {
   body: {
-    type: 'object',
-    properties: {
-      owners: {
-        type: 'array',
-        items: { type: 'string' }
-      },
-      todos: {
-        type: 'array',
-        items: {
-          type: 'object',
-          properties: {
-            item: { type: 'string' },
-            completed: { type: 'boolean' }
-          }
-        }
+    type: 'array',
+    items: {
+      type: 'object',
+      properties: {
+        item: { type: 'string' },
+        completed: { type: 'boolean' }
       }
     }
   }

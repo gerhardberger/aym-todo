@@ -31,15 +31,33 @@ const LISTS_TABLE_SCHEMA = {
 const USER_LISTS_TABLE_SCHEMA = {
   TableName: usersListsTableName,
   AttributeDefinitions: [
-    { AttributeName: 'id', AttributeType: 'S' }
+    { AttributeName: 'userId', AttributeType: 'S' },
+    { AttributeName: 'listId', AttributeType: 'S' }
   ],
   KeySchema: [
-    { AttributeName: 'id', KeyType: 'HASH' }
+    { AttributeName: 'userId', KeyType: 'HASH' },
+    { AttributeName: 'listId', KeyType: 'RANGE' }
   ],
   ProvisionedThroughput: {
     ReadCapacityUnits: 1,
     WriteCapacityUnits: 1
-  }
+  },
+  GlobalSecondaryIndexes: [
+    {
+      IndexName: 'ListsUsersIndex',
+      KeySchema: [
+        { AttributeName: 'listId', KeyType: 'HASH' },
+        { AttributeName: 'userId', KeyType: 'RANGE' }
+      ],
+      Projection: {
+        ProjectionType: 'KEYS_ONLY'
+      },
+      ProvisionedThroughput: {
+        ReadCapacityUnits: 1,
+        WriteCapacityUnits: 1
+      }
+    }
+  ]
 }
 
 const provision = async () => {
