@@ -9,7 +9,8 @@ const {
     usersTableName,
     usersIdIndexName,
     todoListsTableName,
-    usersListsTableName
+    usersListsTableName,
+    listUserIdsIndexName
   }
 } = require('../config.js')
 
@@ -46,7 +47,7 @@ const USER_LISTS_TABLE_SCHEMA = {
   },
   GlobalSecondaryIndexes: [
     {
-      IndexName: 'ListsUsersIndex',
+      IndexName: listUserIdsIndexName,
       KeySchema: [
         { AttributeName: 'listId', KeyType: 'HASH' },
         { AttributeName: 'userId', KeyType: 'RANGE' }

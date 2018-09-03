@@ -10,6 +10,12 @@ module.exports = {
     usersTableName: process.env.DYNAMODB_USERS_TABLENAME || 'Users_LOCAL',
     usersIdIndexName: 'UserIdsIndex',
     todoListsTableName: process.env.DYNAMODB_LISTS_TABLENAME || 'TodoLists_LOCAL',
-    usersListsTableName: process.env.DYNAMODB_USERS_LISTS_TABLENAME || 'UsersLists_LOCAL'
+    usersListsTableName: process.env.DYNAMODB_USERS_LISTS_TABLENAME || 'UsersLists_LOCAL',
+    listUserIdsIndexName: 'ListsUsersIndex'
+  },
+
+  firebase: {
+    serviceAccount: JSON.parse(process.env.GCLOUD_SERVICE_ACCOUNT ||
+      JSON.stringify(require('./keyfile.json')))
   }
 }

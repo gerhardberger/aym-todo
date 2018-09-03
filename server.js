@@ -2,16 +2,13 @@ const fastify = require('fastify')({ logger: true })
 
 const config = require('./config.js')
 const DbAdapter = require('./lib/db-adapter.js')
+const FirebaseAdapter = require('./lib/firebase-adapter.js')
 
 fastify.register(require('./endpoints/routes.js'))
 
 const serverSetup = () => {
-  DbAdapter.setup({
-    region: config.db.region,
-    accessKeyId: config.db.accessKeyId,
-    secretAccessKey: config.db.secretAccessKey,
-    endpoint: config.db.endpoint
-  })
+  DbAdapter.setup()
+  FirebaseAdapter.setup()
 }
 
 const start = async () => {

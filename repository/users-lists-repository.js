@@ -33,6 +33,17 @@ class UsersListsRepository {
 
     return result.Items
   }
+
+  async getListUserIds (listId) {
+    const result = await this.db.query({
+      TableName: config.db.usersListsTableName,
+      IndexName: config.db.listUserIdsIndexName,
+      KeyConditionExpression: 'listId = :listId',
+      ExpressionAttributeValues: { ':listId': listId }
+    }).promise()
+
+    return result.Items.map((item) => item.userId)
+  }
 }
 
 module.exports = UsersListsRepository

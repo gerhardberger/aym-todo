@@ -1,13 +1,16 @@
 const TodoModifier = require('./todo-modifier.js')
 const UsersListsRepository = require('../repository/users-lists-repository.js')
 const ListsRepository = require('../repository/lists-repository.js')
+const Notifier = require('./notifier.js')
 
 jest.mock('../repository/users-lists-repository.js')
 jest.mock('../repository/lists-repository.js')
+jest.mock('./notifier.js')
 
 let todoModifier
 let usersListsRepository
 let listsRepository
+let notifier
 
 const USER_ID = 'dummy user id'
 const LIST_ID = 'dummy list id'
@@ -18,10 +21,12 @@ beforeEach(async () => {
 
   UsersListsRepository.mockClear()
   ListsRepository.mockClear()
+  Notifier.mockClear()
 
   usersListsRepository = new UsersListsRepository()
   listsRepository = new ListsRepository()
-  todoModifier = new TodoModifier(usersListsRepository, listsRepository, idGenerator)
+  notifier = new Notifier()
+  todoModifier = new TodoModifier(usersListsRepository, listsRepository, idGenerator, notifier)
 })
 
 describe('#save', () => {
@@ -52,6 +57,13 @@ describe('#update', () => {
   test('updates todo list', async () => {
     expect(listsRepository.setList).toHaveBeenCalledWith(LIST_ID, TODO_LIST)
   })
+
+  test('sends notification', async () => {
+    expect(notifier.send).toHaveBeenCalledWith(LIST_ID, {
+      title: 'AYM Todo',
+      body: 'Todo list updated'
+    }, { list: LIST_ID })
+  })
 })
 
 describe('#remove', () => {
@@ -72,6 +84,13 @@ describe('#addCollaborator', () => {
   test('adds collaborator to list', async () => {
     expect(usersListsRepository.addUserList).toHaveBeenCalledWith(USER_ID, LIST_ID)
   })
+
+  test('sends notification', async () => {
+    expect(notifier.send).toHaveBeenCalledWith(LIST_ID, {
+      title: 'AYM Todo',
+      body: 'Collaborator added to todo list'
+    }, { user: USER_ID })
+  })
 })
 
 describe('#removeCollaborator', () => {
@@ -81,5 +100,12 @@ describe('#removeCollaborator', () => {
 
   test('removes collaborator to list', async () => {
     expect(usersListsRepository.removeUserList).toHaveBeenCalledWith(USER_ID, LIST_ID)
+  })
+
+  test('sends notification', async () => {
+    expect(notifier.send).toHaveBeenCalledWith(LIST_ID, {
+      title: 'AYM Todo',
+      body: 'Collaborator removed from todo list'
+    }, { user: USER_ID })
   })
 })

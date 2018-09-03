@@ -72,3 +72,30 @@ describe('#getUserListIds', () => {
     expect(listIds).toEqual([LIST_ID])
   })
 })
+
+describe('#getListUserIds', () => {
+  let userIds
+
+  beforeEach(async () => {
+    dbMock.query.mockReturnValue({
+      promise: () => Promise.resolve({ Items: [{ userId: USER_ID }] })
+    })
+
+    userIds = await usersListsRepository.getListUserIds(LIST_ID)
+  })
+
+  test('queries list-user assignments', async () => {
+    expect(dbMock.query).toHaveBeenCalledWith({
+      TableName: config.db.usersListsTableName,
+      IndexName: config.db.listUserIdsIndexName,
+      KeyConditionExpression: 'listId = :listId',
+      ExpressionAttributeValues: {
+        ':listId': LIST_ID
+      }
+    })
+  })
+
+  test('returns list-user assignments', async () => {
+    expect(userIds).toEqual([USER_ID])
+  })
+})
