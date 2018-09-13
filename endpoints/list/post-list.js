@@ -1,4 +1,4 @@
-const TodoModifier = require('../service/todo-modifier.js')
+const TodoModifier = require('../../service/todo-modifier.js')
 
 module.exports = async (request) => {
   const todoModifier = TodoModifier.create()

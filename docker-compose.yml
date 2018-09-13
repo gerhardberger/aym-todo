@@ -23,11 +23,27 @@ services:
     container_name: aym-todo-db
     image: cnadiminti/dynamodb-local:2017-02-16
     networks:
-      aym-todo-backend:
-        aliases:
-          - aym-todo-db
+      - aym-todo-backend
     ports:
       - 5432:8000
+
+  lambda:
+    container_name: aym-todo-lambda
+    image: node:latest
+    build: ./docker/Dockerfile
+    volumes:
+      - .:/app
+    working_dir: /app
+    networks:
+      - aym-todo-backend
+    command:
+      - /bin/bash
+      - -c
+      - |
+          ./docker/wait-for-it.sh aym-todo-db:8000
+          npm run start:serverless
+    ports:
+      - 8081:8081
 
 networks:
   aym-todo-backend:

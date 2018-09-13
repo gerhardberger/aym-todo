@@ -5,6 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "start:serverless": "serverless offline start",
     "lint": "standard",
     "unit": "jest -i",
     "unit:hot": "jest --watch",
@@ -16,6 +17,8 @@
   "devDependencies": {
     "firebase-mock": "^2.2.6",
     "jest": "^23.5.0",
+    "serverless": "^1.31.0",
+    "serverless-offline": "^3.25.11",
     "standard": "^12.0.1"
   },
   "dependencies": {

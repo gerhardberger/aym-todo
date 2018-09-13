@@ -1,4 +1,4 @@
-const TodoFetcher = require('../service/todo-fetcher.js')
+const TodoFetcher = require('../../service/todo-fetcher.js')
 
 module.exports = async (request) => {
   const todoFetcher = TodoFetcher.create()
